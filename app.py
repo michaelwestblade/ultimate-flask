@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -15,6 +15,25 @@ def json_post():
 def home(name):
     return f'Hello, {name}'
 
-@app.route('/<name>')
-def index(name):
-    return f'<p>Hello, {name}!</p>'
+@app.route('/query')
+def query():
+    name = request.args.get('name')
+    location = request.args.get('location')
+    return f'Name: {name}, Location: {location}'
+
+@app.route('/theform')
+def theform():
+    return '''
+        <form method="post" action="/process">
+            <input type="text" name="name">
+            <input type="text" name="location">
+            <input type="submit" value="Submit">
+        </form>
+    '''
+
+@app.route('/process', methods=['POST'])
+def process():
+    name = request.form.get('name')
+    location = request.form.get('location')
+
+    return f'Name: {name}, Location: {location}'
