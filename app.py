@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for, redirect
 
 app = Flask(__name__)
 
@@ -37,3 +37,16 @@ def process():
     location = request.form.get('location')
 
     return f'Name: {name}, Location: {location}'
+
+@app.route('/processjson', methods=['POST'])
+def processjson():
+    data = request.get_json()
+
+    name = data['name']
+    location = data['location']
+
+    return jsonify({'name': name, 'location': location})
+
+@app.route('/redirect')
+def redirect_handler():
+    return redirect(url_for('home'))
