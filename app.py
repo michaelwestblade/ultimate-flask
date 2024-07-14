@@ -15,7 +15,7 @@ def json_post():
 @app.route('/home/<name>')
 def home(name):
     session['name'] = name
-    return render_template('home.html', name=name, display=False)
+    return render_template('home.html', name=name, display=False, list_of_dicts=[{'name': 'tester'}, {'name': 'tester2'}, {'name': 'tester3'}])
 
 @app.route('/query')
 def query():

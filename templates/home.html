@@ -5,3 +5,9 @@
 {% else %}
 <p>This is NOT being displayed</p>
 {% endif %}
+
+<ul>
+{% for dict in list_of_dicts %}
+    <li>{{dict.name}}</li>
+{% endfor %}
+</ul>
