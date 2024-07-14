@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, url_for, redirect, session
+from flask import Flask, jsonify, request, url_for, redirect, session, render_template
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "SECRET"
@@ -25,13 +25,7 @@ def query():
 
 @app.route('/theform')
 def theform():
-    return '''
-        <form method="post" action="/process">
-            <input type="text" name="name">
-            <input type="text" name="location">
-            <input type="submit" value="Submit">
-        </form>
-    '''
+    return render_template('form.html')
 
 @app.route('/process', methods=['POST'])
 def process():
