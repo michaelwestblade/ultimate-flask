@@ -1,7 +1,24 @@
-from flask import Flask, jsonify, request, url_for, redirect, session, render_template
+import sqlite3
+
+from flask import Flask, jsonify, request, url_for, redirect, session, render_template, g
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "SECRET"
+
+def connect_db():
+    sqlite_db = sqlite3.connect("data.db")
+    sqlite_db.row_factory = sqlite3.Row
+    return sqlite_db
+
+def get_db():
+    if not hasattr(g, 'sqlite_db'):
+        g.sqlite_db = connect_db()
+    return g.sqlite_db
+
+@app.teardown_appcontext
+def close_db(error):
+    if hasattr(g, 'sqlite_db'):
+        g.sqlite_db.close()
 
 @app.route('/json')
 def json():
@@ -32,6 +49,10 @@ def process():
     name = request.form.get('name')
     location = request.form.get('location')
 
+    db = get_db()
+    db.execute('INSERT INTO users (name, location) VALUES (?, ?)', (name, location))
+    db.commit()
+
     return f'Name: {name}, Location: {location}'
 
 @app.route('/processjson', methods=['POST'])
@@ -41,8 +62,19 @@ def processjson():
     name = data['name']
     location = data['location']
 
+    db = get_db()
+    db.execute('INSERT INTO users (name, location) VALUES (?, ?)', (name, location))
+    db.commit()
+
     return jsonify({'name': name, 'location': location})
 
 @app.route('/redirect')
 def redirect_handler():
     return redirect(url_for('home'))
+
+@app.route('/viewresults')
+def viewresults():
+    db = get_db()
+    cur = db.execute('SELECT id, name, location from users')
+    results = cur.fetchall()
+    return [{"name": result["name"], "location": result["location"]} for result in results]
