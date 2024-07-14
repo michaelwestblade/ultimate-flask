@@ -1,18 +1,20 @@
-from flask import Flask, jsonify, request, url_for, redirect
+from flask import Flask, jsonify, request, url_for, redirect, session
 
 app = Flask(__name__)
-
+app.config["SECRET_KEY"] = "SECRET"
 
 @app.route('/json')
 def json():
-    return jsonify({'key': 'value', 'key2': [1,2,3], 'key3': True})
+    name = session['name']
+    return jsonify({'key': 'value', 'key2': [1,2,3], 'key3': True, 'name': name})
 
 @app.route('/json',methods=['POST'])
 def json_post():
     return jsonify({'key': 'value', 'key2': [1,2,3], 'key3': True})
 
-@app.route('/home/<name>', defaults={'name':'Computer'})
+@app.route('/home/<name>')
 def home(name):
+    session['name'] = name
     return f'Hello, {name}'
 
 @app.route('/query')
