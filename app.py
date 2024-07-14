@@ -29,10 +29,16 @@ def json():
 def json_post():
     return jsonify({'key': 'value', 'key2': [1,2,3], 'key3': True})
 
+@app.route('/home', defaults={'name': 'Default'})
 @app.route('/home/<name>')
 def home(name):
     session['name'] = name
-    return render_template('home.html', name=name, display=False, list_of_dicts=[{'name': 'tester'}, {'name': 'tester2'}, {'name': 'tester3'}])
+
+    db = get_db()
+    cur = db.execute('SELECT * FROM users')
+    results = cur.fetchall()
+
+    return render_template('home.html', name=name, display=False, list_of_dicts=[{'name': 'tester'}, {'name': 'tester2'}, {'name': 'tester3'}], results=results)
 
 @app.route('/query')
 def query():

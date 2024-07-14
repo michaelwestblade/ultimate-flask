@@ -9,6 +9,11 @@ HOME
 {% block content %}
 <h1>Hello, {{name}} , you are on the home page</h1>
 
+<h1>Results</h1>
+{% for item in results %}
+<h2>ID: {{item.id}} Name: {{item.name}}  Location: {{item.location}}</h2>
+{% endfor %}
+
 {% if display %}
 <p>This is being displayed</p>
 {% else %}
