@@ -5,11 +5,10 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <header class="header">
-        <h1>{% block header %}{% endblock %}</h1>
-    </header>
+    {% include "header.html" %}
     <div class="app">
         {% block content %}{% endblock %}
     </div>
+    {% include "footer.html" %}
 </body>
 </html>
